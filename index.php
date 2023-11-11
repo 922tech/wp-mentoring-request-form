@@ -12,7 +12,20 @@ Version: 1.0.0
 Author URI: http://ma.tt/
 */
 define('ModelsModule', 'models.php');
-use Models\MenteeRequest;
 require_once(ModelsModule);
 
-$s = new MenteeRequest();
+use Models\MenteeRequest;
+use Models\Form;
+
+
+function render_register_form(){
+    $form = new Form();
+    $s = new MenteeRequest();
+    return $form->input_text($name='fname', $label='First name', $grid_num=10,);
+    // $csrf_token = wp_create_nonce('csrf_token') ;
+    // $form_document = $form->generate($csrf_token);
+    // echo $form_document;
+}
+
+
+add_shortcode('mentee_register_form', 'render_register_form');
