@@ -15,7 +15,39 @@ class MenteeRequest {
     public $phone;
     public $field;
     public $description;
-  
+    public $email;
+
+    function __construct($first_name, $last_name, $phone, $field, $description, $email) {
+      $this->first_name = $first_name;
+      $this->last_name = $last_name;
+      $this->phone = $phone;
+      $this->field = $field;
+      $this->description = $description;
+      $this->email = $email;
+    }
+
+    public function is_clean(){
+      $regexFirstName = '/^[A-Za-z\s]{1,50}$/';
+      $regexLastName = '/^[A-Za-z\s]{1,50}$/';
+      $regexPhone = '/^[0-9]{10}$/';
+      $regexField = '/^[A-Za-z\s]{1,50}$/';
+      $regexDescription = '/^.{1,500}$/';
+      $regexEmail = '/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/';
+
+      if (
+        preg_match($regexFirstName, $data['first_name']) &&
+        preg_match($regexLastName, $data['last_name']) &&
+        preg_match($regexPhone, $data['phone']) &&
+        preg_match($regexField, $data['field']) &&
+        preg_match($regexDescription, $data['description']) &&
+        preg_match($regexEmail, $data['email'])
+        )
+         {
+          return true;
+      }
+
+    }
+
     public function saveToDatabase() {
       global $wpdb;
   
@@ -26,14 +58,17 @@ class MenteeRequest {
         'last_name' => $this->last_name,
         'phone' => $this->phone,
         'field' => $this->field,
-        'description' => $this->description
+        'description' => $this->description,
+        'email' => $this->email
       );
 
-      $format = array('%s', '%s', '%s', '%s', '%s');
-  
-      $wpdb->insert($table_name, $data, $format);
-    }
+      $format = array('%s', '%s', '%s', '%s', '%s', '%s');
+
+      if ($this->is_clean()){
+      return $wpdb->insert($table_name, $data, $format);
+     }
   }
+}
   
 
 
